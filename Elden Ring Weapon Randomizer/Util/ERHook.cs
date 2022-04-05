@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Threading;
+using Infusion = Elden_Ring_Weapon_Randomizer.ERWeapon.Infusion;
+using WeaponType = Elden_Ring_Weapon_Randomizer.ERWeapon.WeaponType;
 
 namespace Elden_Ring_Weapon_Randomizer
 {
@@ -25,6 +27,7 @@ namespace Elden_Ring_Weapon_Randomizer
         private PHPointer SoloParamRepositorySetup { get; set; }
         private PHPointer SoloParamRepository { get; set; }
         private PHPointer EquipParamWeapon { get; set; }
+        private PHPointer EquipParamGem { get; set; }
 
         //private PHPointer DurabilityAddr { get; set; }
         //private PHPointer DurabilitySpecialAddr { get; set; }
@@ -49,16 +52,45 @@ namespace Elden_Ring_Weapon_Randomizer
 
             SoloParamRepository = CreateBasePointer(BasePointerFromSetupPointer(SoloParamRepositorySetup));
             EquipParamWeapon = CreateChildPointer(SoloParamRepository, EROffsets.EquipParamWeaponOffset1, EROffsets.EquipParamWeaponOffset2, EROffsets.EquipParamWeaponOffset3);
+            EquipParamGem = CreateChildPointer(SoloParamRepository, EROffsets.EquipParamGemOffset1, EROffsets.EquipParamGemOffset2, EROffsets.EquipParamGemOffset3);
             var bytes = new byte[0];
             EquipParamWeaponOffsetDict = BuildOffsetDictionary(EquipParamWeapon, "EQUIP_PARAM_WEAPON_ST", ref bytes);
             EquipParamWeaponBytes = bytes;
-            GetWeaponParams();
+            EquipParamGemOffsetDict = BuildOffsetDictionary(EquipParamGem, "RAM_GEM_ST", ref bytes);
+            EquipParamGemBytes = bytes;
+            GetParams();
         }
-        private void GetWeaponParams()
+        private void GetParams()
         {
             foreach (var category in ERItemCategory.All)
             {
                 GetProperties(category);
+            }
+
+            foreach (var gem in ERGem.Gems)
+            {
+                GetParams(gem);
+                GetWeapons(gem);
+            }
+        }
+
+        private void GetParams(ERGem gem)
+        {
+            gem.DefaultWeaponAttr = (byte)BitConverter.ToChar(EquipParamGemBytes, EquipParamGemOffsetDict[gem.ID] + (int)EROffsets.EquipParamGem.Default_WepAttr);
+            gem.SwordArtID = BitConverter.ToInt32(EquipParamGemBytes, EquipParamGemOffsetDict[gem.ID] + (int)EROffsets.EquipParamGem.SwordArtsParamId);
+        }
+
+        private void GetWeapons(ERGem gem)
+        {
+            gem.WeaponTypes = new List<WeaponType>();
+            var bitField = BitConverter.ToInt64(EquipParamGemBytes, EquipParamGemOffsetDict[gem.ID] + (int)EROffsets.EquipParamGem.CanMountWep_Dagger);
+            if (bitField == 0)
+                return;
+            
+            for (int i = 0; i < ERGem.Weapons.Count; i++)
+            {
+                if ((bitField & (1L << i)) != 0)
+                    gem.WeaponTypes.Add(ERGem.Weapons[i]);
             }
         }
 
@@ -73,11 +105,14 @@ namespace Elden_Ring_Weapon_Randomizer
                 }
                 weapon.Unique = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.MaterialSetID) == 2200;
                 weapon.SwordArtId = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.SwordArtsParamId);
+                weapon.Type = (ERWeapon.WeaponType)BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.WepType);
             }
         }
 
         public Dictionary<int, int> EquipParamWeaponOffsetDict { get; private set; }
         private byte[] EquipParamWeaponBytes { get; set; }
+        public Dictionary<int, int> EquipParamGemOffsetDict { get; private set; }
+        private byte[] EquipParamGemBytes { get; set; }
         private Dictionary<int, int> BuildOffsetDictionary(PHPointer pointer, string expectedParamName, ref byte[] paramBytes)
         {
             var dictionary = new Dictionary<int, int>();
@@ -250,11 +285,33 @@ namespace Elden_Ring_Weapon_Randomizer
             }
         }
 
+        private int OGRHandWeapon1 { get; set; }
+        private PHPointer OGRHandWeapon1Param 
+        { 
+            get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGRHandWeapon1]);
+        }
+        private int OGRHandWeapon1SwordArtID 
+        { 
+            get => OGRHandWeapon1Param?.ReadInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId) ?? 0; 
+            set => OGRHandWeapon1Param?.WriteInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId, value);
+        }
+        private int OGLHandWeapon1 { get; set; }
+        private PHPointer OGLHandWeapon1Param
+        {
+            get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGLHandWeapon1]);
+        }
+        private int OGLHandWeapon1SwordArtID
+        {
+            get => OGLHandWeapon1Param?.ReadInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId) ?? 0;
+            set => OGLHandWeapon1Param?.WriteInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId, value);
+        }
+
         List<int> UsedWeapons = new List<int>();
 
         static Random RRand = new Random();
         static Random LRand = new Random(RRand.Next());
         public bool LevelRestrict { get; set; }
+        public bool RandomizeAsh { get; set; }
 
         Timer RHandTimer = new Timer();
         public int RHandTime { get; set; } = 60;
@@ -267,11 +324,16 @@ namespace Elden_Ring_Weapon_Randomizer
                 if (_rHandRandom)
                 {
                     RRand = new Random(RRand.Next());
+                    OGRHandWeapon1 = Util.DeleteFromEnd(RHandWeapon1, 2) * 100; //remove the levels from the weapon
                     RHandTimer.Interval = RHandTime * 1000;
                     RHandTimer.Start();
                 }
                 else
+                {
                     RHandTimer.Stop();
+                    RHandWeapon1 = OGRHandWeapon1;
+                    OGRHandWeapon1SwordArtID = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGRHandWeapon1] + (int)EROffsets.EquipParamWeapon.SwordArtsParamId);
+                }
             }
         }
 
@@ -279,20 +341,14 @@ namespace Elden_Ring_Weapon_Randomizer
         {
             UsedWeapons.Clear();
             UsedWeapons.Add(Util.DeleteFromEnd(RHandWeapon1, 3));
-            //UsedWeapons.Add(Util.DeleteFromEnd(RHandWeapon2, 3));
             if (_lHandRandom)
             {
                 UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon1, 3));
-                //UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon2, 3));
             }
-            
 
-            RHandWeapon1 = GetWeapon(RRand);
-            //RHandWeapon2 = GetWeapon(RRand);
-            //if (_lHandRandom)
-            //    LHandWeapon2 = GetWeapon();
-            //else
-            //    RHandWeapon2 = GetWeapon();
+            ERWeapon newWeapon = GetWeapon(RRand);
+            RHandWeapon1 = newWeapon.ID;
+            OGRHandWeapon1SwordArtID = newWeapon.SwordArtId;
 
             RHandTimer.Interval = RHandTime * 1000;
             //Arrow1 = ERItemCategory.Arrows.Weapons[RRand.Next(ERItemCategory.Arrows.Weapons.Count)].ID;
@@ -312,11 +368,16 @@ namespace Elden_Ring_Weapon_Randomizer
                 if (_lHandRandom)
                 {
                     LRand = new Random(LRand.Next());
+                    OGLHandWeapon1 = Util.DeleteFromEnd(LHandWeapon1, 2) * 100; //remove the levels from the weapon
                     LHandTimer.Interval = LHandTime * 1000;
                     LHandTimer.Start();
                 }
                 else
+                {
                     LHandTimer.Stop();
+                    LHandWeapon1 = OGLHandWeapon1;
+                    OGLHandWeapon1SwordArtID = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGLHandWeapon1] + (int)EROffsets.EquipParamWeapon.SwordArtsParamId);
+                }
             }
         }
 
@@ -326,43 +387,50 @@ namespace Elden_Ring_Weapon_Randomizer
             {
                 UsedWeapons.Clear();
                 UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon1, 3));
-                //UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon2, 3));
             }
+            ERWeapon newWeapon = GetWeapon(LRand);
+            LHandWeapon1 = newWeapon.ID;
+            OGLHandWeapon1SwordArtID = newWeapon.SwordArtId;
 
-            LHandWeapon1 = GetWeapon(LRand);
-            //LHandWeapon2 = GetWeapon(LRand);
-            //if (_rHandRandom)
-            //    RHandWeapon2 = GetWeapon();
-            //else
-            //    LHandWeapon2 = GetWeapon();
 
             LHandTimer.Interval = LHandTime * 1000;
-            //if (!_rHandRandom)
-            //{
-            //    Arrow1 = ERItemCategory.Arrows.Weapons[LRand.Next(ERItemCategory.Arrows.Weapons.Count)].ID;
-            //    Arrow2 = ERItemCategory.GreatArrows.Weapons[LRand.Next(ERItemCategory.GreatArrows.Weapons.Count)].ID;
-            //    Bolt1 = ERItemCategory.Bolts.Weapons[LRand.Next(ERItemCategory.Bolts.Weapons.Count)].ID;
-            //    Bolt2 = ERItemCategory.Bolts.Weapons[LRand.Next(ERItemCategory.Bolts.Weapons.Count)].ID;
-            //}
         }
 
-        private int GetWeapon(Random rand)
+        private ERWeapon GetWeapon(Random rand)
         {
-            ERWeapon newWeapon;
+            ERWeapon newWeapon = new ERWeapon();
+            ERWeapon weapon;
             do
             {
                 var newWeaponCategory = ERItemCategory.All[rand.Next(ERItemCategory.All.Count)];
-                newWeapon = newWeaponCategory.Weapons[rand.Next(newWeaponCategory.Weapons.Count)];
+                weapon = newWeaponCategory.Weapons[rand.Next(newWeaponCategory.Weapons.Count)];
             } 
-            while (Util.DeleteFromEnd(RHandWeapon1, 3) == newWeapon.RealID ||
-            Util.DeleteFromEnd(RHandWeapon2, 3) == newWeapon.RealID ||
-            Util.DeleteFromEnd(LHandWeapon1, 3) == newWeapon.RealID ||
-            Util.DeleteFromEnd(LHandWeapon2, 3) == newWeapon.RealID || 
-            UsedWeapons.Contains(newWeapon.RealID));
+            while (Util.DeleteFromEnd(RHandWeapon1, 3) == weapon.RealID ||
+            Util.DeleteFromEnd(RHandWeapon2, 3) == weapon.RealID ||
+            Util.DeleteFromEnd(LHandWeapon1, 3) == weapon.RealID ||
+            Util.DeleteFromEnd(LHandWeapon2, 3) == weapon.RealID || 
+            UsedWeapons.Contains(weapon.RealID));
+
+            newWeapon.Clone(weapon);
 
             var id = newWeapon.ID;
-            var infusion = !newWeapon.Unique && newWeapon.Infusible ? (rand.Next(13) * 100) : 0;
-            id += infusion;
+
+            ERGem ash;
+
+            if (RandomizeAsh && !newWeapon.Unique)
+            {
+                var gems = ERGem.Gems.Where(x => x.WeaponTypes.Contains(newWeapon.Type)).ToList();
+                ash = gems[rand.Next(gems.Count)];
+            }
+            else
+            {
+                ash = ERGem.Gems.FirstOrDefault(x => x.SwordArtID == newWeapon.SwordArtId);
+            }
+
+            newWeapon.SwordArtId = ash?.SwordArtID ?? newWeapon.SwordArtId;
+
+            var infusion = ash?.Infusions[rand.Next(ash.Infusions.Count)] ?? 0;
+            id += (int)infusion;
             var maxLevel = newWeapon.Unique ? 10 : 25;
 
             if (LevelRestrict)
@@ -370,7 +438,8 @@ namespace Elden_Ring_Weapon_Randomizer
             else
                 id += rand.Next(maxLevel);
 
-            return id;
+
+            return newWeapon;
         }
 
         public int MaxLevel { get; set; } = 80;

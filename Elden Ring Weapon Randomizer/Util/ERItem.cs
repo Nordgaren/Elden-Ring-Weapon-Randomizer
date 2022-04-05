@@ -21,5 +21,10 @@ namespace Elden_Ring_Weapon_Randomizer
             ID = Convert.ToInt32(itemEntry.Groups["id"].Value);
         }
 
+        public ERItem()
+        {
+            Name = "Null";
+        }
+
     }
 }

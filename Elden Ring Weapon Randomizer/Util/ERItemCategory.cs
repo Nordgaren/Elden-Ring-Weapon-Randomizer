@@ -43,11 +43,13 @@ namespace Elden_Ring_Weapon_Randomizer
             GreatBolts = new ERItemCategory(Util.GetResource("Weapons.GreatBolts.txt"), false);
             Arrows = new ERItemCategory(Util.GetResource("Weapons.Arrows.txt"), false);
             Bolts = new ERItemCategory(Util.GetResource("Weapons.Bolts.txt"), false);
+            Test = new ERItemCategory(Util.GetResource("Weapons.RangedWeapons.txt"), false);
         }
         public static List<ERItemCategory> All = new List<ERItemCategory>();
         public static ERItemCategory GreatArrows;
         public static ERItemCategory GreatBolts;
         public static ERItemCategory Arrows;
         public static ERItemCategory Bolts;
+        public static ERItemCategory Test;
     }
 }

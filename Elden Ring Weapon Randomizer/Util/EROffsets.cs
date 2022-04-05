@@ -38,21 +38,37 @@ namespace Elden_Ring_Weapon_Randomizer
 
         public const string SoloParamRepositorySetupAoB = "48 8B 0D ? ? ? ? 48 85 C9 0F 84 ? ? ? ? 45 33 C0 BA 8E 00 00 00";
 
-        public const int EquipParamWeaponOffset1 = 0x88;
-        public const int EquipParamWeaponOffset2 = 0x80;
-        public const int EquipParamWeaponOffset3 = 0x80;
-
         public enum Param
         {
             TotalParamLength = 0x0,
             TableLength = 0x30,
         }
 
+        public const int EquipParamWeaponOffset1 = 0x88;
+        public const int EquipParamWeaponOffset2 = 0x80;
+        public const int EquipParamWeaponOffset3 = 0x80;
+
         public enum EquipParamWeapon
         {
             MaterialSetID = 0x5C,
             ReinforceTypeID = 0xDA,
-            SwordArtsParamId = 0x198
+            SwordArtsParamId = 0x198,
+            WepType = 0x1A6
+        }
+
+        public const int EquipParamGemOffset1 = 0x2BD8;
+        public const int EquipParamGemOffset2 = 0x80;
+        public const int EquipParamGemOffset3 = 0x80;
+
+        public enum EquipParamGem
+        {
+            SwordArtsParamId = 0x18,
+            CanMountWep_Dagger = 0x38,
+            CanMountWep_SwordPierce = 0x39,
+            CanMountWep_SpearLarge = 0x3A,
+            CanMountWep_BowSmall = 0x3B,
+            CanMountWep_ShieldSmall = 0x3C,
+            Default_WepAttr = 0x35
         }
     }
 }

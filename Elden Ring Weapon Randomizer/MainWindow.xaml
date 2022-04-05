@@ -44,6 +44,7 @@
                         <wpfTool:IntegerUpDown Value="{Binding Hook.MaxLevel}" Width="50" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center"/>
                     </StackPanel>
                     <Separator Visibility="Hidden"/>
+                    <CheckBox Content="Randomize Ash of War " IsChecked="{Binding Hook.RandomizeAsh}" HorizontalAlignment="Left" />
                     <!--<CheckBox Content="Infinite Durability" IsChecked="{Binding Hook.InfDurability}" HorizontalAlignment="Left" />-->
                 </StackPanel>
             </StackPanel>

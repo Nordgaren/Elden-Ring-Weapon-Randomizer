@@ -25,6 +25,7 @@ namespace Elden_Ring_Weapon_Randomizer
         {
             InitializeComponent();
             ERItemCategory.GetItemCategories();
+            ERGem.GetGems();
         }
         Timer UpdateTimer = new Timer();
         private void Window_Loaded(object sender, RoutedEventArgs e)
