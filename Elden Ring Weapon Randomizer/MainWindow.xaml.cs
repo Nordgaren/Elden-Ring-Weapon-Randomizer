@@ -53,6 +53,10 @@ namespace Elden_Ring_Weapon_Randomizer
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             UpdateTimer.Stop();
+            if (Hook.RHandRandom)
+                Hook.RHandRandom = false;
+            if (Hook.LHandRandom)
+                Hook.LHandRandom = false;
             Hook.RestoreParams();
             //Hook.InfDurability = false;
         }

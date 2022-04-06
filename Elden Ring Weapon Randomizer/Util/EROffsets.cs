@@ -50,10 +50,14 @@ namespace Elden_Ring_Weapon_Randomizer
 
         public enum EquipParamWeapon
         {
+            SortID = 0x8,
             MaterialSetID = 0x5C,
+            OriginEquipWep = 0x60,
+            IconID = 0xBE,
             ReinforceTypeID = 0xDA,
             SwordArtsParamId = 0x198,
-            WepType = 0x1A6
+            WepType = 0x1A6,
+            OriginEquipWep16 = 0x250
         }
 
         public const int EquipParamGemOffset1 = 0x2BD8;
@@ -68,7 +72,11 @@ namespace Elden_Ring_Weapon_Randomizer
             CanMountWep_SpearLarge = 0x3A,
             CanMountWep_BowSmall = 0x3B,
             CanMountWep_ShieldSmall = 0x3C,
-            Default_WepAttr = 0x35
+            Default_WepAttr = 0x35,
+            
         }
+
+        public const string EquipItemAoB = "40 53 48 83 EC 20 48 8B D9 48 8D 51 10";
+
     }
 }

@@ -25,7 +25,7 @@ namespace Elden_Ring_Weapon_Randomizer
         }
         public static void GetItemCategories()
         {
-            string result = Util.GetResource("ERItemCategories.txt");
+            string result = Util.GetTxtResource("Resources/ERItemCategories.txt");
             All = new List<ERItemCategory>();
 
             foreach (string line in result.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
@@ -35,15 +35,14 @@ namespace Elden_Ring_Weapon_Randomizer
                     Match itemEntry = categoryEntryRx.Match(line);
                     var name = itemEntry.Groups["list"].Value;
                     var infusible = Convert.ToBoolean(itemEntry.Groups["infusable"].Value);
-                    All.Add(new ERItemCategory(Util.GetResource($"Weapons.{name}"), infusible));
+                    All.Add(new ERItemCategory(Util.GetTxtResource($"Resources/{name}"), infusible));
                 }
             };
 
-            GreatArrows = new ERItemCategory(Util.GetResource("Weapons.GreatArrows.txt"), false);
-            GreatBolts = new ERItemCategory(Util.GetResource("Weapons.GreatBolts.txt"), false);
-            Arrows = new ERItemCategory(Util.GetResource("Weapons.Arrows.txt"), false);
-            Bolts = new ERItemCategory(Util.GetResource("Weapons.Bolts.txt"), false);
-            Test = new ERItemCategory(Util.GetResource("Weapons.RangedWeapons.txt"), false);
+            GreatArrows = new ERItemCategory(Util.GetTxtResource("Resources/Weapons/GreatArrows.txt"), false);
+            GreatBolts = new ERItemCategory(Util.GetTxtResource("Resources/Weapons/GreatBolts.txt"), false);
+            Arrows = new ERItemCategory(Util.GetTxtResource("Resources/Weapons/Arrows.txt"), false);
+            Bolts = new ERItemCategory(Util.GetTxtResource("Resources/Weapons/Bolts.txt"), false);
         }
         public static List<ERItemCategory> All = new List<ERItemCategory>();
         public static ERItemCategory GreatArrows;
