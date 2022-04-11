@@ -28,18 +28,16 @@ namespace Elden_Ring_Weapon_Randomizer
         private PHPointer SoloParamRepository { get; set; }
         private PHPointer EquipParamWeapon { get; set; }
         private PHPointer EquipParamGem { get; set; }
-        private PHPointer EquipItem { get; set; }
 
         //private PHPointer DurabilityAddr { get; set; }
         //private PHPointer DurabilitySpecialAddr { get; set; }
-        public bool Loaded => this?.PlayerGameData?.Resolve() != IntPtr.Zero;
+        public bool Loaded => PlayerGameData != null ? PlayerGameData.Resolve() != IntPtr.Zero : false;
         public ERHook(int refreshInterval, int minLifetime, Func<Process, bool> processSelector)
             : base(refreshInterval, minLifetime, processSelector)
         {
             OnHooked += ERHook_OnHooked;
             GameDataManSetup = RegisterAbsoluteAOB(EROffsets.GameDataManSetupAoB);
             SoloParamRepositorySetup = RegisterAbsoluteAOB(EROffsets.SoloParamRepositorySetupAoB);
-            EquipItem = RegisterAbsoluteAOB(EROffsets.EquipItemAoB);
 
             RHandTimer.Elapsed += RHandTimer_Elapsed;
             RHandTimer.AutoReset = true;
@@ -58,10 +56,9 @@ namespace Elden_Ring_Weapon_Randomizer
             var bytes = new byte[0];
             EquipParamWeaponOffsetDict = BuildOffsetDictionary(EquipParamWeapon, "EQUIP_PARAM_WEAPON_ST", ref bytes);
             EquipParamWeaponBytes = bytes;
-            EquipParamGemOffsetDict = BuildOffsetDictionary(EquipParamGem, "RAM_GEM_ST", ref bytes);
+            EquipParamGemOffsetDict = BuildOffsetDictionary(EquipParamGem, "EQUIP_PARAM_GEM_ST", ref bytes);
             EquipParamGemBytes = bytes;
             GetParams();
-            var lol = EquipItem.Resolve();
         }
         private void GetParams()
         {
@@ -124,10 +121,10 @@ namespace Elden_Ring_Weapon_Randomizer
         private Dictionary<int, int> BuildOffsetDictionary(PHPointer pointer, string expectedParamName, ref byte[] paramBytes)
         {
             var dictionary = new Dictionary<int, int>();
-            var nameOffset = pointer.ReadInt32((int)EROffsets.Param.TotalParamLength);
+            var nameOffset = pointer.ReadInt32((int)EROffsets.Param.NameOffset);
             var paramName = pointer.ReadString(nameOffset, Encoding.UTF8, 0x18);
             if (paramName != expectedParamName)
-                throw new InvalidOperationException($"Incorrect Param Pointer: {expectedParamName}");
+                throw new InvalidOperationException($"Incorrect Param Pointer: {paramName} should be {expectedParamName}");
 
             paramBytes = pointer.ReadBytes((int)EROffsets.Param.TotalParamLength, (uint)nameOffset);
             var tableLength = pointer.ReadInt32((int)EROffsets.Param.TableLength);
@@ -298,60 +295,28 @@ namespace Elden_Ring_Weapon_Randomizer
         { 
             get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGRHandWeapon1]);
         }
-        private int OGRHandSortID
+
+        private int OGRHandWeapon2 { get; set; }
+        private PHPointer OGRHandWeapon2Param
         {
-            get => OGRHandWeapon1Param?.ReadInt32((int)EROffsets.EquipParamWeapon.SortID) ?? 0;
-            set => OGRHandWeapon1Param?.WriteInt32((int)EROffsets.EquipParamWeapon.SortID, value);
+            get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGRHandWeapon2]);
         }
-        private int OGRHandWeapon1SwordArtID
+
+        private int OGRHandWeapon3 { get; set; }
+        private PHPointer OGRHandWeapon3Param
         {
-            get => OGRHandWeapon1Param?.ReadInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId) ?? 0;
-            set => OGRHandWeapon1Param?.WriteInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId, value);
+            get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGRHandWeapon3]);
         }
-        private short OGRHandIconID
-        {
-            get => OGRHandWeapon1Param?.ReadInt16((int)EROffsets.EquipParamWeapon.IconID) ?? 0;
-            set => OGRHandWeapon1Param?.WriteInt16((int)EROffsets.EquipParamWeapon.IconID, value);
-        }
-        private byte[] OGRHandOriginEquipWep
-        { 
-            get => OGRHandWeapon1Param?.ReadBytes((int)EROffsets.EquipParamWeapon.OriginEquipWep, 0x40) ?? new byte[0]; 
-            set => OGRHandWeapon1Param?.WriteBytes((int)EROffsets.EquipParamWeapon.OriginEquipWep, value);
-        }
-        private byte[] OGRHandOriginEquipWep16
-        {
-            get => OGRHandWeapon1Param?.ReadBytes((int)EROffsets.EquipParamWeapon.OriginEquipWep16, 0x28) ?? new byte[0];
-            set => OGRHandWeapon1Param?.WriteBytes((int)EROffsets.EquipParamWeapon.OriginEquipWep16, value);
-        }
-        private int OGLHandWeapon1 { get; set; }
-        private PHPointer OGLHandWeapon1Param
-        {
-            get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGLHandWeapon1]);
-        }
-        private int OGLHandSortID
-        {
-            get => OGLHandWeapon1Param?.ReadInt32((int)EROffsets.EquipParamWeapon.SortID) ?? 0;
-            set => OGLHandWeapon1Param?.WriteInt32((int)EROffsets.EquipParamWeapon.SortID, value);
-        }
-        private int OGLHandWeapon1SwordArtID
-        {
-            get => OGLHandWeapon1Param?.ReadInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId) ?? 0;
-            set => OGLHandWeapon1Param?.WriteInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId, value);
-        }
-        private short OGLHandIconID
-        {
-            get => OGLHandWeapon1Param?.ReadInt16((int)EROffsets.EquipParamWeapon.IconID) ?? 0;
-            set => OGLHandWeapon1Param?.WriteInt16((int)EROffsets.EquipParamWeapon.IconID, value);
-        }
-        private byte[] OGLHandOriginEquipWep
-        {
-            get => OGLHandWeapon1Param?.ReadBytes((int)EROffsets.EquipParamWeapon.OriginEquipWep, 0x40) ?? new byte[0];
-            set => OGLHandWeapon1Param?.WriteBytes((int)EROffsets.EquipParamWeapon.OriginEquipWep, value);
-        }
-        private byte[] OGLHandOriginEquipWep16
-        {
-            get => OGLHandWeapon1Param?.ReadBytes((int)EROffsets.EquipParamWeapon.OriginEquipWep16, 0x28) ?? new byte[0];
-            set => OGLHandWeapon1Param?.WriteBytes((int)EROffsets.EquipParamWeapon.OriginEquipWep16, value);
+
+        public bool Randomize 
+        { set 
+            {
+                RHandRandom = value;
+                LHandRandom = value;
+
+                if (!value)
+                    RestoreParams();
+            } 
         }
 
         List<int> UsedWeapons = new List<int>();
@@ -364,6 +329,9 @@ namespace Elden_Ring_Weapon_Randomizer
         Timer RHandTimer = new Timer();
         public int RHandTime { get; set; } = 60;
         private bool _rHandRandom;
+        public bool RHand1 { get; set; } = true;
+        public bool RHand2 { get; set; } = false;
+        public bool RHand3 { get; set; } = false;
         public bool RHandRandom
         {
             get => _rHandRandom;
@@ -374,54 +342,93 @@ namespace Elden_Ring_Weapon_Randomizer
                 {
                     RRand = new Random(RRand.Next());
                     OGRHandWeapon1 = Util.DeleteFromEnd(RHandWeapon1, 2) * 100; //remove the levels from the weapon
-                    RHandTimer.Interval = RHandTime * 1000;
+                    OGRHandWeapon2 = Util.DeleteFromEnd(RHandWeapon2, 2) * 100; //remove the levels from the weapon
+                    OGRHandWeapon3 = Util.DeleteFromEnd(RHandWeapon3, 2) * 100; //remove the levels from the weapon
+                    RandomizeRightHand();
                     RHandTimer.Start();
                 }
                 else
                 {
                     RHandTimer.Stop();
                     RHandWeapon1 = OGRHandWeapon1;
-                    OGRHandSortID = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGRHandWeapon1] + (int)EROffsets.EquipParamWeapon.SortID);
-                    Array.Copy(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGRHandWeapon1] + (int)EROffsets.EquipParamWeapon.OriginEquipWep, OGRHandOriginEquipWep, 0x0, OGRHandOriginEquipWep.Length);
-                    OGRHandIconID = BitConverter.ToInt16(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGRHandWeapon1] + (int)EROffsets.EquipParamWeapon.IconID);
-                    OGRHandWeapon1SwordArtID = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGRHandWeapon1] + (int)EROffsets.EquipParamWeapon.SwordArtsParamId);
-                    Array.Copy(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGRHandWeapon1] + (int)EROffsets.EquipParamWeapon.OriginEquipWep16, OGRHandOriginEquipWep16, 0x0, OGRHandOriginEquipWep16.Length);
+                    RHandWeapon2 = OGRHandWeapon2;
+                    RHandWeapon3 = OGRHandWeapon3;
                 }
             }
         }
 
         private void RHandTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            UsedWeapons.Clear();
-            UsedWeapons.Add(Util.DeleteFromEnd(RHandWeapon1, 3));
-            if (_lHandRandom)
-            {
-                UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon1, 3));
-            }
+            RandomizeRightHand();
 
-            ERWeapon weapon = GetWeapon(RRand);
-            AssignRHWeapon(OGRHandWeapon1Param, weapon);
-            
-
-            RHandTimer.Interval = RHandTime * 1000;
             //Arrow1 = ERItemCategory.Arrows.Weapons[RRand.Next(ERItemCategory.Arrows.Weapons.Count)].ID;
             //Arrow2 = ERItemCategory.GreatArrows.Weapons[RRand.Next(ERItemCategory.GreatArrows.Weapons.Count)].ID;
             //Bolt1 = ERItemCategory.Bolts.Weapons[RRand.Next(ERItemCategory.Bolts.Weapons.Count)].ID;
             //Bolt2 = ERItemCategory.Bolts.Weapons[RRand.Next(ERItemCategory.Bolts.Weapons.Count)].ID;
         }
 
-        private void AssignRHWeapon(PHPointer oGRHandWeapon1Param, ERWeapon weapon)
+        private void RandomizeRightHand()
         {
-            RHandWeapon1 = weapon.ID;
-            OGRHandSortID = weapon.SortID;
-            OGRHandOriginEquipWep = weapon.OriginEquipWep;
-            OGRHandIconID = weapon.IconID;
-            OGRHandWeapon1SwordArtID = weapon.SwordArtId;
-            OGRHandOriginEquipWep16 = weapon.OriginEquipWep16;
+            UsedWeapons.Clear();
+            if (RHand1)
+                UsedWeapons.Add(Util.DeleteFromEnd(RHandWeapon1, 3));
+            if (RHand2)
+                UsedWeapons.Add(Util.DeleteFromEnd(RHandWeapon2, 3));
+            if (RHand3)
+                UsedWeapons.Add(Util.DeleteFromEnd(RHandWeapon3, 3));
+
+            if (RHand1)
+            {
+                ERWeapon weapon = GetWeapon(RRand);
+                RHandWeapon1 = weapon.ID;
+                AssignWeapon(OGRHandWeapon1Param, weapon);
+            }
+
+            if (RHand2)
+            {
+                ERWeapon weapon = GetWeapon(RRand);
+                RHandWeapon2 = weapon.ID;
+                AssignWeapon(OGRHandWeapon2Param, weapon);
+            }
+
+            if (RHand3)
+            {
+                ERWeapon weapon = GetWeapon(RRand);
+                RHandWeapon3 = weapon.ID;
+                AssignWeapon(OGRHandWeapon3Param, weapon);
+            }
+
+            RHandTimer.Interval = RHandTime * 1000;
+        }
+
+        private void AssignWeapon(PHPointer weaponPointer, ERWeapon weapon)
+        {
+            weaponPointer.WriteInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId, weapon.SwordArtId);
+            weaponPointer.WriteInt16((int)EROffsets.EquipParamWeapon.IconID, weapon.IconID);
+        }
+
+
+        private int OGLHandWeapon1 { get; set; }
+        private PHPointer OGLHandWeapon1Param
+        {
+            get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGLHandWeapon1]);
+        }
+        private int OGLHandWeapon2 { get; set; }
+        private PHPointer OGLHandWeapon2Param
+        {
+            get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGLHandWeapon2]);
+        }
+        private int OGLHandWeapon3 { get; set; }
+        private PHPointer OGLHandWeapon3Param
+        {
+            get => CreateBasePointer(EquipParamWeapon.Resolve() + EquipParamWeaponOffsetDict[OGLHandWeapon3]);
         }
 
         Timer LHandTimer = new Timer();
         public int LHandTime { get; set; } = 60;
+        public bool LHand1 { get; set; } = true;
+        public bool LHand2 { get; set; } = false;
+        public bool LHand3 { get; set; } = false;
         private bool _lHandRandom;
         public bool LHandRandom
         {
@@ -433,44 +440,59 @@ namespace Elden_Ring_Weapon_Randomizer
                 {
                     LRand = new Random(LRand.Next());
                     OGLHandWeapon1 = Util.DeleteFromEnd(LHandWeapon1, 2) * 100; //remove the levels from the weapon
-                    LHandTimer.Interval = LHandTime * 1000;
+                    OGLHandWeapon2 = Util.DeleteFromEnd(LHandWeapon2, 2) * 100; //remove the levels from the weapon
+                    OGLHandWeapon3 = Util.DeleteFromEnd(LHandWeapon3, 2) * 100; //remove the levels from the weapon
+                    RandomizeLeftHand();
                     LHandTimer.Start();
                 }
                 else
                 {
                     LHandTimer.Stop();
                     LHandWeapon1 = OGLHandWeapon1;
-                    OGLHandSortID = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGRHandWeapon1] + (int)EROffsets.EquipParamWeapon.SortID);
-                    Array.Copy(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGLHandWeapon1] + (int)EROffsets.EquipParamWeapon.OriginEquipWep, OGLHandOriginEquipWep, 0x0, OGLHandOriginEquipWep.Length);
-                    OGLHandIconID = BitConverter.ToInt16(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGLHandWeapon1] + (int)EROffsets.EquipParamWeapon.IconID);
-                    OGLHandWeapon1SwordArtID = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGLHandWeapon1] + (int)EROffsets.EquipParamWeapon.SwordArtsParamId);
-                    Array.Copy(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[OGLHandWeapon1] + (int)EROffsets.EquipParamWeapon.OriginEquipWep16, OGLHandOriginEquipWep16, 0x0, OGLHandOriginEquipWep16.Length);
+                    LHandWeapon2 = OGLHandWeapon2;
+                    LHandWeapon3 = OGLHandWeapon3;
                 }
             }
         }
 
         private void LHandTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            RandomizeLeftHand();
+        }
+
+        private void RandomizeLeftHand()
+        {
             if (!_rHandRandom)
             {
                 UsedWeapons.Clear();
-                UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon1, 3));
+                if (LHand1)
+                    UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon1, 3));
+                if (LHand2)
+                    UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon2, 3));
+                if (LHand3)
+                    UsedWeapons.Add(Util.DeleteFromEnd(LHandWeapon3, 3));
             }
-            ERWeapon weapon = GetWeapon(LRand);
-            AssignLHWeapon(OGLHandWeapon1Param, weapon);
 
+            if (LHand1)
+            {
+                ERWeapon weapon = GetWeapon(LRand);
+                LHandWeapon1 = weapon.ID;
+                AssignWeapon(OGLHandWeapon1Param, weapon);
+            }
+            if (LHand2)
+            {
+                ERWeapon weapon = GetWeapon(LRand);
+                LHandWeapon2 = weapon.ID;
+                AssignWeapon(OGLHandWeapon2Param, weapon);
+            }
+            if (LHand3)
+            {
+                ERWeapon weapon = GetWeapon(LRand);
+                LHandWeapon3 = weapon.ID;
+                AssignWeapon(OGLHandWeapon3Param, weapon);
+            }
 
             LHandTimer.Interval = LHandTime * 1000;
-        }
-
-        private void AssignLHWeapon(PHPointer oGLHandWeapon1Param, ERWeapon weapon)
-        {
-            LHandWeapon1 = weapon.ID;
-            OGLHandSortID = weapon.SortID;
-            OGLHandOriginEquipWep = weapon.OriginEquipWep;
-            OGLHandIconID = weapon.IconID;
-            OGLHandWeapon1SwordArtID = weapon.SwordArtId;
-            OGLHandOriginEquipWep16 = weapon.OriginEquipWep16;
         }
 
         private ERWeapon GetWeapon(Random rand)

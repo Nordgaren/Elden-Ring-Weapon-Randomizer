@@ -18,16 +18,7 @@ namespace Elden_Ring_Weapon_Randomizer
         public ViewModel()
         {
             Hook = new ERHook(5000, 5000, p => p.MainWindowTitle == "ELDEN RING™");
-            Hook.OnHooked += Hook_OnHooked;
-            Hook.OnUnhooked += Hook_OnUnhooked;
             Hook.Start();
-        }
-        private void Hook_OnUnhooked(object sender, PHEventArgs e)
-        {
-        }
-
-        private void Hook_OnHooked(object sender, PHEventArgs e)
-        {
         }
 
         public void Update()

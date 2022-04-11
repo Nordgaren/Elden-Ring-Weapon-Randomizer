@@ -7,12 +7,13 @@
         xmlns:p="clr-namespace:Elden_Ring_Weapon_Randomizer"
         xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="Weapon Randomizer" Height="250" Width="315" Loaded="Window_Loaded" Background="DarkGray" Closing="Window_Closing" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        SizeToContent="Height"
+        Title="Weapon Randomizer" Height="300" Width="315" Loaded="Window_Loaded" Background="DarkGray" Closing="Window_Closing" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <local:ViewModel x:Name="VModel"/>
     </Window.DataContext>
-    <Grid>
-        
+
+<Grid>
         <StackPanel>
             <StackPanel Orientation="Horizontal">
                 <Label Content="Connected: "/>
@@ -20,24 +21,38 @@
                 <Label Content="Level: "/>
                 <Label Content="{Binding Hook.LevelString}" Foreground="{Binding ForegroundLoaded}"/>
             </StackPanel>
-            <CheckBox Content="Both" IsEnabled="{Binding Loaded}" Checked="CheckBox_Checked" Unchecked="CheckBox_Checked" Margin="5,5,0,0"/>
+            <CheckBox Content="Randomize" IsEnabled="{Binding Loaded}" IsChecked="{Binding Hook.Randomize}" Margin="5,5,0,0" HorizontalAlignment="Center"/>
             <StackPanel Margin="15,0,15,0" >
-                <StackPanel HorizontalAlignment="Center">
-                    <Label Content="Right Hand"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <CheckBox Content="Randomize RHand Weapon for: " IsChecked="{Binding Hook.RHandRandom}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding Loaded}" x:Name="cbxRight" />
-                        <wpfTool:IntegerUpDown Value="{Binding Hook.RHandTime}" Width="40" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" />
-                        <Label Content="seconds"/>
+                <Expander Header="Right Hand">
+                    <StackPanel HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Content="Timer"/>
+                            <wpfTool:IntegerUpDown Value="{Binding Hook.RHandTime}" Width="40" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <CheckBox Content="RHand1 " IsChecked="{Binding Hook.RHand1}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding Loaded}" />
+                            <CheckBox Content="RHand2 " IsChecked="{Binding Hook.RHand2}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding Loaded}" />
+                            <CheckBox Content="RHand3 " IsChecked="{Binding Hook.RHand3}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding Loaded}" />
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Center">
-                    <Label Content="Left Hand"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <CheckBox Content="Randomize LHand Weapon for: " IsChecked="{Binding Hook.LHandRandom}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding Loaded}" x:Name="cbxLeft"/>
-                        <wpfTool:IntegerUpDown Value="{Binding Hook.LHandTime}" Width="40" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" />
-                        <Label Content="seconds"/>
+                </Expander>
+                <Separator Visibility="Hidden" Height="10"/>
+                <Expander Header="Left Hand">
+                    <StackPanel HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Label Content="Timer"/>
+                            <wpfTool:IntegerUpDown Value="{Binding Hook.LHandTime}" Width="40" VerticalAlignment="Center" TextAlignment="Center" VerticalContentAlignment="Center" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <CheckBox Content="LHand1 " IsChecked="{Binding Hook.LHand1}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding Loaded}" />
+                            <CheckBox Content="LHand2 " IsChecked="{Binding Hook.LHand2}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding Loaded}" />
+                            <CheckBox Content="LHand3 " IsChecked="{Binding Hook.LHand3}" HorizontalAlignment="Center" VerticalAlignment="Center" IsEnabled="{Binding Loaded}" />
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
+                </Expander>
+                <Separator Visibility="Hidden" Height="10"/>
                 <StackPanel HorizontalAlignment="Center" Margin="0,10,0,0">
                     <StackPanel Orientation="Horizontal">
                         <CheckBox Content="Scale Weapons with Level Max: " IsChecked="{Binding Hook.LevelRestrict}" HorizontalAlignment="Left" />
@@ -45,9 +60,9 @@
                     </StackPanel>
                     <Separator Visibility="Hidden"/>
                     <CheckBox Content="Randomize Ash of War " IsChecked="{Binding Hook.RandomizeAsh}" HorizontalAlignment="Left" />
-                    <!--<CheckBox Content="Infinite Durability" IsChecked="{Binding Hook.InfDurability}" HorizontalAlignment="Left" />-->
                 </StackPanel>
             </StackPanel>
+            <Separator Height="20" Visibility="Hidden"/>
         </StackPanel>
     </Grid>
 </Window>

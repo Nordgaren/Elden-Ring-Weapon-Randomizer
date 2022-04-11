@@ -61,13 +61,5 @@ namespace Elden_Ring_Weapon_Randomizer
             //Hook.InfDurability = false;
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            var box = sender as CheckBox;
-
-            cbxRight.IsEnabled = cbxLeft.IsEnabled = !box.IsChecked.Value;
-            cbxRight.IsChecked = Hook.RHandRandom = box.IsChecked.Value;
-            cbxLeft.IsChecked = Hook.LHandRandom = box.IsChecked.Value;
-        }
     }
 }

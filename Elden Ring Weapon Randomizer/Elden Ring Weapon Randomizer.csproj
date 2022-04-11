@@ -6,7 +6,22 @@
     <RootNamespace>Elden_Ring_Weapon_Randomizer</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <AssemblyVersion>1.0</AssemblyVersion>
+    <FileVersion>1.0</FileVersion>
+    <PackageIcon>magma_whip_candlestick.png</PackageIcon>
+    <ApplicationIcon>magma_whip_candlestick.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="magma_whip_candlestick.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Icon\magma_whip_candlestick.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.3.0" />

@@ -41,7 +41,8 @@ namespace Elden_Ring_Weapon_Randomizer
         public enum Param
         {
             TotalParamLength = 0x0,
-            TableLength = 0x30,
+            NameOffset = 0x10,
+            TableLength = 0x30
         }
 
         public const int EquipParamWeaponOffset1 = 0x88;
@@ -75,8 +76,6 @@ namespace Elden_Ring_Weapon_Randomizer
             Default_WepAttr = 0x35,
             
         }
-
-        public const string EquipItemAoB = "40 53 48 83 EC 20 48 8B D9 48 8D 51 10";
 
     }
 }
