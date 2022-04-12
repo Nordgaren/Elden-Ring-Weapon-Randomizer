@@ -24,7 +24,7 @@ This path `%appdata%/EldenRing` should have your steam ID in it. Select the fold
 
 ## Thank You  
 **[TKGP](https://github.com/JKAnderson/)** Author of [DS Gadget](https://github.com/JKAnderson/DS-Gadget) and [Property Hook](https://github.com/JKAnderson/PropertyHook)  
-**[Pav]** Author of the CE table used for most the the randomizer  
+**Pav** Author of the CE table used for most the the randomizer  
 
 ## Libraries
 My fork of [Property Hook](https://github.com/Nordgaren/PropertyHook) by [TKGP](https://github.com/JKAnderson/)  
