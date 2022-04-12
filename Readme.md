@@ -21,6 +21,9 @@ This path `%appdata%/EldenRing` should have your steam ID in it. Select the fold
 ## Libraries
 My fork of [Property Hook](https://github.com/Nordgaren/PropertyHook) by [TKGP](https://github.com/JKAnderson/)  
 
+## Ko-fi
+[If you wish to support my mod making habit](https://ko-fi.com/nordgaren)
+
 # Change Log  
 ### Version 1  
 
