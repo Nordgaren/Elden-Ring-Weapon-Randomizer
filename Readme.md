@@ -1,6 +1,14 @@
 # Elden-Ring-Weapon-Randomizer
 Weapon Randomizer for Elden Ring
 
+# WARNING  
+Backup your saves before using this tool, and restore the backups before going online.  
+
+## Requirements 
+* [.NET 5 Desktop Runtime x64](https://download.visualstudio.microsoft.com/download/pr/b1902c77-e022-4b3e-a01a-e8830df936ff/09d0957435bf8c37eae11b4962d4221b/windowsdesktop-runtime-5.0.15-win-x64.exe)  
+* [.NET 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49981)
+
+
 ## How to use
 
 Elden Ring has anticheat, so you will need to disable it using your preferred method. This mod also edits memory that could be recorded by the games internal anticheat. I would recommend you backup your saves and restore them before going back online. If you're paranoid like I am, block the game from accessing the internet, too. :)
