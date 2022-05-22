@@ -15,6 +15,8 @@ Elden Ring has anticheat, so you will need to disable it using your preferred me
 
 The randomizer works on the params of your currently held weapons, so make sure you have two different weapons with no ash equipped in each slot you want to randomize before starting the randomizer (If you have empty hands, you'll get a random ash between the two weapons that were randomized, because both will be applied to the fist param). This randomizer will retore your weapon params when you stop it, and it will restore all weapon params once you close out. 
 
+Format for ERItemCategories.txt `Multiplier Path/To/WeaponList.txt Infusible`. The multiplier is how many times this list will be put into the big list of randomized weapons. The path is the path to the text file with the list of `ID Name` formatted weapons. Infusible is `true` or `false`. Use `true` for melee weapons (Unique weapons get passed on for infusion no matter what) and `false` for items like bows and casting tools.  
+
 ## Disable EAC
 
 Make a text file called `steam_appid.txt` in your Game directory with the number `1245620` inside. Launch the game from the .exe, and you won't have EAC running anymore.
@@ -33,6 +35,10 @@ My fork of [Property Hook](https://github.com/Nordgaren/PropertyHook) by [TKGP](
 [If you wish to support my mod making habit](https://ko-fi.com/nordgaren)
 
 # Change Log  
+### Version 1  
+
+* Changed format for categories. The format is now: `Multiplier Path/To/WeaponList.txt Infusible`. The multiplier 
+
 ### Version 1  
 
 * Release

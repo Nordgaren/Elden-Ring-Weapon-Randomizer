@@ -12,8 +12,9 @@ namespace Elden_Ring_Weapon_Randomizer
     class ERItemCategory
     {
         public List<ERWeapon> Weapons;
+        public static List<ERWeapon> AllWeapons;
 
-        private static Regex categoryEntryRx = new Regex(@"^(?<list>.+) (?<infusable>\S+)$");
+        private static Regex categoryEntryRx = new Regex(@"^(?<iterations>\S+) (?<infusable>\S+) (?<list>.+)$");
         private ERItemCategory(string itemList, bool infusible)
         {
             Weapons = new List<ERWeapon>();
@@ -27,6 +28,7 @@ namespace Elden_Ring_Weapon_Randomizer
         {
             string result = Util.GetTxtResource("Resources/ERItemCategories.txt");
             All = new List<ERItemCategory>();
+            AllWeapons = new List<ERWeapon>();
 
             foreach (string line in result.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
             {
@@ -35,7 +37,17 @@ namespace Elden_Ring_Weapon_Randomizer
                     Match itemEntry = categoryEntryRx.Match(line);
                     var name = itemEntry.Groups["list"].Value;
                     var infusible = Convert.ToBoolean(itemEntry.Groups["infusable"].Value);
-                    All.Add(new ERItemCategory(Util.GetTxtResource($"Resources/{name}"), infusible));
+                    var category = new ERItemCategory(Util.GetTxtResource($"Resources/{name}"), infusible);
+                    All.Add(category);
+
+                    var iterations = int.Parse(itemEntry.Groups["iterations"].Value);
+                    for (int i = 0; i < iterations; i++)
+                    {
+                        foreach (var item in category.Weapons)
+                        {
+                            AllWeapons.Add(item);
+                        }
+                    }
                 }
             };
 

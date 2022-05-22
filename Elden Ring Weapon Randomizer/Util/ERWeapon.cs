@@ -77,15 +77,13 @@ namespace Elden_Ring_Weapon_Randomizer
         public int SortID { get; set; }
         public int RealID { get; set; }
         public bool Infusible { get; set; }
-        public byte[] OriginEquipWep { get; set; } = new byte[0x40];
         public bool Unique { get; set; }
         public short IconID { get; set; }
         public int SwordArtId { get; set; }
         public WeaponType Type { get; set; }
-        public byte[] OriginEquipWep16 { get; set; } = new byte[0x28];
         public ERWeapon(string config, bool infusible) : base(config) 
         {
-            RealID = Util.DeleteFromEnd(ID, 3);
+            RealID = Util.DeleteFromEnd(ID, 4);
             Infusible = infusible;
         }
 
@@ -99,12 +97,10 @@ namespace Elden_Ring_Weapon_Randomizer
            ID = source.ID;
            RealID = source.RealID;
            Infusible = source.Infusible;
-           Array.Copy(source.OriginEquipWep, OriginEquipWep,source.OriginEquipWep.Length);
            IconID = source.IconID;
            Unique = source.Unique;
            SwordArtId = source.SwordArtId;
            Type = source.Type;
-           Array.Copy(source.OriginEquipWep16, OriginEquipWep16, source.OriginEquipWep16.Length);
         }
     }
 }

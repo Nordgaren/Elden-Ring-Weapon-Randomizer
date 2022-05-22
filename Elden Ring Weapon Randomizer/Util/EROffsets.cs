@@ -74,8 +74,6 @@ namespace Elden_Ring_Weapon_Randomizer
             CanMountWep_BowSmall = 0x3B,
             CanMountWep_ShieldSmall = 0x3C,
             Default_WepAttr = 0x35,
-            
         }
-
     }
 }

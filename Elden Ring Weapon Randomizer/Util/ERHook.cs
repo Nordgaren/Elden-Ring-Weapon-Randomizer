@@ -44,6 +44,8 @@ namespace Elden_Ring_Weapon_Randomizer
 
             LHandTimer.Elapsed += LHandTimer_Elapsed;
             LHandTimer.AutoReset = true;
+
+            var wut = 10001225  % 10000;
         }
         private void ERHook_OnHooked(object? sender, PHEventArgs e)
         {
@@ -62,10 +64,8 @@ namespace Elden_Ring_Weapon_Randomizer
         }
         private void GetParams()
         {
-            foreach (var category in ERItemCategory.All)
-            {
-                GetWeaponProperties(category);
-            }
+
+            GetWeaponProperties();
 
             foreach (var gem in ERGem.Gems)
             {
@@ -73,9 +73,9 @@ namespace Elden_Ring_Weapon_Randomizer
                 GetWeapons(gem);
             }
         }
-        private void GetWeaponProperties(ERItemCategory category)
+        private void GetWeaponProperties()
         {
-            foreach (var weapon in category.Weapons)
+            foreach (var weapon in ERItemCategory.AllWeapons)
             {
                 if (!EquipParamWeaponOffsetDict.ContainsKey(weapon.ID))
                 {
@@ -88,11 +88,9 @@ namespace Elden_Ring_Weapon_Randomizer
                     weapon.Infusible = false;
 
                 weapon.SortID = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.SortID);
-                Array.Copy(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.OriginEquipWep, weapon.OriginEquipWep, 0x0, weapon.OriginEquipWep.Length);
                 weapon.IconID = BitConverter.ToInt16(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.IconID);
                 weapon.SwordArtId = BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.SwordArtsParamId);
                 weapon.Type = (ERWeapon.WeaponType)BitConverter.ToInt32(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.WepType);
-                Array.Copy(EquipParamWeaponBytes, EquipParamWeaponOffsetDict[weapon.ID] + (int)EROffsets.EquipParamWeapon.OriginEquipWep16, weapon.OriginEquipWep16, 0x0, weapon.OriginEquipWep16.Length);
             }
         }
         private void GetGemProperties(ERGem gem)
@@ -501,8 +499,7 @@ namespace Elden_Ring_Weapon_Randomizer
             ERWeapon weapon;
             do
             {
-                var newWeaponCategory = ERItemCategory.All[rand.Next(ERItemCategory.All.Count)];
-                weapon = newWeaponCategory.Weapons[rand.Next(newWeaponCategory.Weapons.Count)];
+                weapon = ERItemCategory.AllWeapons[rand.Next(ERItemCategory.AllWeapons.Count)];
             } 
             while (Util.DeleteFromEnd(RHandWeapon1, 3) == weapon.RealID ||
             Util.DeleteFromEnd(RHandWeapon2, 3) == weapon.RealID ||
