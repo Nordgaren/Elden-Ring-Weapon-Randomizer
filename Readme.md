@@ -1,6 +1,8 @@
 # Elden-Ring-Weapon-Randomizer
 Weapon Randomizer for Elden Ring
 
+[![GitHub all releases](https://img.shields.io/github/downloads/Nordgaren/Elden-Ring-Weapon-Randomizer/total)](https://github.com/Nordgaren/Elden-Ring-Weapon-Randomizer/releases/latest)
+
 # WARNING  
 Backup your saves before using this tool, and restore the backups before going online.  
 
