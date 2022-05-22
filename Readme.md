@@ -10,10 +10,19 @@ Backup your saves before using this tool, and restore the backups before going o
 
 
 ## How to use
+Elden Ring has anticheat, so you will need to disable it using your preferred method. This mod also edits memory that could be recorded by
+the games internal anticheat. I would recommend you backup your saves
+and restore them before going back online. If you're paranoid like I am,
+block the game from accessing the internet, too. :)
 
-Elden Ring has anticheat, so you will need to disable it using your preferred method. This mod also edits memory that could be recorded by the games internal anticheat. I would recommend you backup your saves and restore them before going back online. If you're paranoid like I am, block the game from accessing the internet, too. :)
+The randomizer works on the params of your currently held weapons, so make sure you have ALL different weapons with no ash equipped in
+each slot you want to randomize before starting the randomizer (If you have empty hands, you'll get a random ash between the two weapons that were
+randomized, because both will be applied to the fist param).
 
-The randomizer works on the params of your currently held weapons, so make sure you have two different weapons with no ash equipped in each slot you want to randomize before starting the randomizer (If you have empty hands, you'll get a random ash between the two weapons that were randomized, because both will be applied to the fist param). This randomizer will retore your weapon params when you stop it, and it will restore all weapon params once you close out. 
+Start the game, then start "Elden Ring Weapon Randomizer.exe" and choose your settings. Make sure you follow the above directions, check "Randomize", and you will be good to go!
+
+This randomizer will restore your weapon params when you stop it, and it will
+restore all weapon params to the state they were in when the app launched, once you close out.
 
 Format for ERItemCategories.txt `Multiplier Path/To/WeaponList.txt Infusible`. The multiplier is how many times this list will be put into the big list of randomized weapons. The path is the path to the text file with the list of `ID Name` formatted weapons. Infusible is `true` or `false`. Use `true` for melee weapons (Unique weapons get passed on for infusion no matter what) and `false` for items like bows and casting tools.  
 
