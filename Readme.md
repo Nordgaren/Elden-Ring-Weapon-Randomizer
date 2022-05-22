@@ -13,7 +13,7 @@ Backup your saves before using this tool, and restore the backups before going o
 
 Elden Ring has anticheat, so you will need to disable it using your preferred method. This mod also edits memory that could be recorded by the games internal anticheat. I would recommend you backup your saves and restore them before going back online. If you're paranoid like I am, block the game from accessing the internet, too. :)
 
-The randomizer works on the params of your currently held weapons, so make sure you have two different weapons with no ash equipped in each slot you want to randomize before starting the randomizer (If you have empty hands, you'll get a random ash between the two weapons that were randomized, because both will be applied to the fist param). This randomizer will retore your weapon params when you stop it, and it will restore all weapon params once you close out. 
+The randomizer works on the params of your currently held weapons, so make sure you have ALL different weapons with no ash equipped in each slot you want to randomize before starting the randomizer (If you have empty hands, you'll get a random ash between the two weapons that were randomized, because both will be applied to the fist param). This randomizer will restore your weapon params when you stop it, and it will restore all weapon params once you close out. 
 
 ## Disable EAC
 
