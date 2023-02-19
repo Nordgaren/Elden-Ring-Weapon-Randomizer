@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elden Ring Weapon Randomizer", "Elden Ring Weapon Randomizer\Elden Ring Weapon Randomizer.csproj", "{60DA51C0-8911-4406-BE85-D57182ADF46C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyHook", "..\Elden Ring Debug Tool\PropertyHook\PropertyHook\PropertyHook.csproj", "{18EFF8D2-C4D5-4E18-9A31-38E106BA1CF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyHook", "PropertyHook\PropertyHook\PropertyHook.csproj", "{18EFF8D2-C4D5-4E18-9A31-38E106BA1CF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
