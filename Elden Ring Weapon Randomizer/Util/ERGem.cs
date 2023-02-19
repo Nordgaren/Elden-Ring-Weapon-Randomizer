@@ -12,7 +12,7 @@ namespace Elden_Ring_Weapon_Randomizer
     class ERGem
     {
         public static List<ERGem> Gems;
-        private static Regex gemEntryRx = new Regex(@"^\s*(?<id>\S+)\s+(?<name>.*)$");
+        private static Regex gemEntryRx = new Regex(@"(?<id>\d+)\s+(?<name>.*)");
 
         public string Name;
         public int ID;
@@ -71,8 +71,12 @@ namespace Elden_Ring_Weapon_Randomizer
         {
             string result = Util.GetTxtResource("Resources/Weapons/Gems.txt");
             Gems = new List<ERGem>();
-
-            foreach (string line in result.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries))
+            string[] lines = result.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length <= 1)
+            {
+                throw new Exception("Resources/ERItemCategories.txt only has one or fewer entries. Are you sure it is set up correctly?");
+            }
+            foreach (string line in lines)
             {
                 if (!line.Contains("//")) //determine if line is a valid resource or not
                 {
