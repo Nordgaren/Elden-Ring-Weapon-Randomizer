@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Elden Ring Debug Tool\PropertyHook\PropertyHook\PropertyHook.csproj" />
+    <ProjectReference Include="..\PropertyHook\PropertyHook\PropertyHook.csproj" />
   </ItemGroup>
 
   <ItemGroup>

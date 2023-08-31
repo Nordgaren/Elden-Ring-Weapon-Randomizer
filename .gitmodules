@@ -1,0 +1,3 @@
+[submodule "PropertyHook"]
+	path = PropertyHook
+	url = git@github.com:Nordgaren/PropertyHook.git

@@ -9,7 +9,7 @@ namespace Elden_Ring_Weapon_Randomizer
 {
     class ERItem
     {
-        private static Regex itemEntryRx = new Regex(@"^\s*(?<id>\S+)\s+(?<name>.*)$");
+        private static Regex itemEntryRx = new Regex(@"(?<id>\d+)\s+(?<name>.*)");
 
         public string Name;
         public int ID;

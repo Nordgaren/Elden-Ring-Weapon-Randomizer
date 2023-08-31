@@ -196,7 +196,7 @@ namespace Elden_Ring_Weapon_Randomizer
             {
                 if (!Loaded)
                     return;
-                PlayerGameData.WriteInt32((int)EROffsets.Weapons.RHandWeapon1, value);
+                PlayerGameData.WriteInt32((int)EROffsets.Weapons.RHandWeapon1, value); // 0x3A0, 2000000 (Longsword)
             }
         }
         public int RHandWeapon2
@@ -403,8 +403,9 @@ namespace Elden_Ring_Weapon_Randomizer
 
         private void AssignWeapon(PHPointer weaponPointer, ERWeapon weapon)
         {
-            weaponPointer.WriteInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId, weapon.SwordArtId);
+            weaponPointer.WriteInt32((int)EROffsets.EquipParamWeapon.SwordArtsParamId, weapon.SwordArtId); // 0x198, 10
             weaponPointer.WriteInt16((int)EROffsets.EquipParamWeapon.IconID, weapon.IconID);
+            // PlayerGameData.WriteInt32((int)EROffsets.Weapons.RHandWeapon1, value);
         }
 
 
